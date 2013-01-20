@@ -28,9 +28,11 @@ class Parser(HTMLParser):
 class VK_AUTH():
     def __init__(self, params):
         self.auth_params = params
+        self.auth_params["response_type"] = "token"
+        self.auth_params["display"] = "popup"
         self.user_id = None
         self.access_token = None
-        self.authorization_url = 'http://oauth.vk.com/oauth/authorize'
+        self.authorization_url = "http://oauth.vk.com/oauth/authorize"
 
     def __get_opener(self):
         return urllib2.build_opener(
