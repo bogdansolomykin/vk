@@ -50,6 +50,16 @@ class VK_AUTH():
         except:            
             return None
 
+    def _allow_access(self, url, params):
+        opener = self.__get_opener()
+        params = urllib.urlencode(params)
+        try:            
+            request = opener.open(url, params)
+            resp_url = request.geturl()
+            self.access_token, self.user_id = self.__obtaining_data(resp_url)
+        except IOError:
+            print "Can't open %s" % url
+
     def authorization(self, email, password):
         opener = self.__get_opener()
         params = urllib.urlencode(self.auth_params)
@@ -64,17 +74,7 @@ class VK_AUTH():
             parser.close()        
             parser.params["email"] = email
             parser.params["pass"] = password
-            return self.allow_access(parser.action_url, parser.params)            
-            
-    def allow_access(self, url, params):
-        opener = self.__get_opener()
-        params = urllib.urlencode(params)
-        try:            
-            request = opener.open(url, params)
-            resp_url = request.geturl()
-            self.access_token, self.user_id = self.__obtaining_data(resp_url)
-        except IOError:
-            print "Can't open %s" % url
+            return self._allow_access(parser.action_url, parser.params)                    
 
     def get_access_token(self):
         return self.access_token
@@ -90,20 +90,18 @@ class VK_API():
         self.api_url = "https://api.vk.com/method/"
 
     def __get_url(self, method, fields):
-        params = self.__get_params(fields)
+        params = self.__get_params(fields)        
         return urllib2.Request(self.api_url + method, params)
 
-    def __get_params(self, fields):
-        params = {
-            "uids": self.user_id,
-            "access_token": self.access_token
-        }
-        if fields:            
-            params["fields"] = fields
+    def __get_params(self, params):
+        if not params:            
+            params = dict()
+        params["uids"] = self.user_id        
+        params["access_token"] = self.access_token        
         return urllib.urlencode(params)    
 
-    def request(self, method, fields=None):
-        url = self.__get_url(method, fields)
+    def request(self, method, **kwargs):        
+        url = self.__get_url(method, kwargs)        
         try:
             request = urllib2.urlopen(url)
         except IOError:

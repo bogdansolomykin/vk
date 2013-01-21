@@ -13,8 +13,9 @@ user_id = auth.get_user_id()
 
 #api request
 api = VK_API(access_token, user_id)
-user_info = api.request('users.get', fields=("last_name", "first_name"))
-user_audios = api.request('audio.get', {"uid":user_id})
+user_info = api.request('users.get')
+user_audios = api.request('audio.get', uid=user_id})
+user_friends = api.request('friends.get', uid=user_id, fields="first_name, last_name, sex", order="name")
 
 # more api methods: 
 # https://vk.com/developers.php?oid=-17680044&p=API_Method_Description
