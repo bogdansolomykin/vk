@@ -13,4 +13,10 @@ user_id = auth.get_user_id()
 
 #api request
 api = VK_API(access_token, user_id)
-api.request('users.get', fields=("last_name", "first_name"))
+user_info = api.request('users.get', fields=("last_name", "first_name"))
+user_audios = api.request('audio.get', {"uid":user_id})
+
+# more api methods: 
+# https://vk.com/developers.php?oid=-17680044&p=API_Method_Description
+# or 
+# https://vk.com/developers.php?oid=-17680044&p=Advanced_API_Methods
