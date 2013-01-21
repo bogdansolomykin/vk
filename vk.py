@@ -84,5 +84,29 @@ class VK_AUTH():
 
             
 class VK_API():
-    def __init__(self):
-        pass
+    def __init__(self, access_token, user_id):
+        self.access_token = access_token
+        self.user_id = user_id
+        self.api_url = "https://api.vk.com/method/"
+
+    def __get_url(self, method, fields):
+        params = self.__get_params(fields)
+        return urllib2.Request(self.api_url + method, params)
+
+    def __get_params(self, fields):
+        params = {
+            "uids": self.user_id,
+            "access_token": self.access_token
+        }
+        if fields:            
+            params["fields"] = fields
+        return urllib.urlencode(params)    
+
+    def request(self, method, fields=None):
+        url = self.__get_url(method, fields)
+        try:
+            request = urllib2.urlopen(url)
+        except IOError:
+            print "Can't open %s" % url
+        response = request.read()
+        return json.loads(response)
