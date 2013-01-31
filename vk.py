@@ -48,7 +48,7 @@ class VK_AUTH():
             user_id = re.findall(user_id_pattern, url)[0][1]
             return access_token, user_id
         except:            
-            return None
+            return None, None
 
     def _allow_access(self, url, params):
         opener = self.__get_opener()
@@ -105,6 +105,6 @@ class VK_API():
         try:
             request = urllib2.urlopen(url)
         except IOError:
-            print "Can't open %s" % url
+            print "Wrong params"
         response = request.read()
         return json.loads(response)
