@@ -1,4 +1,4 @@
 vk
 ==
 
-authorization and api wrapper for most popular russian social network vk.com
+python authorization(desktop) and api wrapper for most popular Russian social network vk.com
